@@ -6,6 +6,8 @@
 //--------------------------------------------------------------
 void testApp::setup(){	
     
+    tester = 55;
+    
     myRegPage.setup();
     
 	//ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
@@ -20,6 +22,9 @@ void testApp::setup(){
     
     fNameTog = false;
     lNameTog = false;
+    monthTog = false;
+    dayTog = false;
+    yearTog = false;
     
     loginBG.loadImage("images/loginBG.jpg");
     profileBG.loadImage("images/profileBG.png");
@@ -57,6 +62,8 @@ void testApp::update(){
 void testApp::draw(){	
     ofBackground(255, 255, 255, 255);
     
+
+    
     switch (pageNumber) {
             
         case 0: //login screen
@@ -68,6 +75,10 @@ void testApp::draw(){
             
             if (fNameTog) textField_on.draw(255, 857);
             if (lNameTog) textField_on.draw(255, 1129);
+            ofSetColor(255, 50, 100);
+            if (monthTog) ofRect(133*2, 710*2, 160*2, 60*2);
+            if (dayTog) ofRect(350*2, 710*2, 110*2, 60*2);
+            if(yearTog) ofRect(500*2, 710*2, 150*2, 60*2);
             break;
             
         case 1: //profile screen
@@ -91,6 +102,37 @@ void testApp::draw(){
         default:
             break;
     }
+    
+    /*
+     UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)]; 
+    
+    NSInteger viewcount= 4; 
+    for (int i = 0; i <viewcount; i++) 
+    { 
+        CGFloat y = i * self.view.frame.size.height; 
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, y,self.view.frame.size.width, self .view.frame.size.height)];      
+        view.backgroundColor = [UIColor greenColor]; 
+        [scrollview addSubview:view]; 
+        [view release]; 
+    }
+    scrollview.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height *viewcount); 
+    
+    id s = [[NSString alloc] initWithString:@"Hello, World"]; 
+    
+    UIDatePicker *datePicker=[[UIDatePicker alloc] initWithFrame:CGRectMake(0, 0, 480, 216)];
+    datePicker.timeZone = [NSTimeZone defaultTimeZone]; datePicker.datePickerMode=UIDatePickerModeDate; datePicker.date=[NSDate date]; datePicker.maximumDate=[NSDate date]; [datePicker addTarget:s action:@selector(pickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    id s = [[NSString alloc] initWithString:@"Hello, World"]; 
+    
+    CGRect frame = CGRectMake(0.0, 0.0, 200.0, 10.0);
+    UISlider *slider = [[UISlider alloc] initWithFrame:frame];
+    [slider addTarget:s action:@selector(sliderAction:) forControlEvents:UIControlEventValueChanged];
+    [slider setBackgroundColor:[UIColor clearColor]];
+    slider.minimumValue = 0.0;
+    slider.maximumValue = 50.0;
+    slider.continuous = YES;
+    slider.value = 25.0;
+   */
 }
 
 //--------------------------------------------------------------
@@ -101,26 +143,53 @@ void testApp::exit(){
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs & touch){
     
-    //login button
-    if (pageNumber == 0 && touch.x > 135 && touch.x < 300 && touch.y > ofGetHeight()-180 && touch.y < ofGetHeight()-100){ //hit login button
+    cout<<"touch.x: " << touch.x << "   y: "<< touch.y << endl;
+    
+    //welcome screen 
+    if (pageNumber == 0){
+        
+        //hit login button
+        if(touch.x > 135 && touch.x < 300 && touch.y > ofGetHeight()-180 && touch.y < ofGetHeight()-100){ 
         firstNameKey -> setVisible(false);
         lastNameKey -> setVisible(false);
         pageNumber = 1; //move to profile page
+        }
+        
+        //hit registration button
+        if (touch.x > 415 && touch.x < 600 && touch.y > ofGetHeight()-180 && touch.y < ofGetHeight()-100){ //hit login button
+            firstNameKey -> setVisible(false);
+            lastNameKey -> setVisible(false);
+            ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_PORTRAIT);
+            pageNumber = 2; //move to registration page
+        }
+        
+        //hit month button
+        if (touch.x > 133 && touch.x < 293 && touch.y > 710 && touch.y < 770){ //hit MONTH button
+            monthTog = true;
+        }
+        
+        //hit day button
+        if (touch.x > 350 && touch.x < 460 && touch.y > 710 && touch.y < 770){ //hit MONTH button
+            dayTog = true;
+        }
+        
+        //hit year button
+        if (touch.x > 500 && touch.x < 650 && touch.y > 710 && touch.y < 770){ //hit MONTH button
+            yearTog = true;
+        }
     }
     
     
-    //registration button
-    if (pageNumber == 0 && touch.x > 415 && touch.x < 600 && touch.y > ofGetHeight()-180 && touch.y < ofGetHeight()-100){ //hit login button
-        firstNameKey -> setVisible(false);
-        lastNameKey -> setVisible(false);
-        ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_PORTRAIT);
-        pageNumber = 2; //move to registration page
-    }
+
     
+    //profile screen
     if (pageNumber == 1 && touch.x > 500 && touch.y < 500){
+        fNameTog = false;
+        lNameTog = false;
         pageNumber = 0; //go back to login page for now?
     }
     
+    //registration screen 
     if (pageNumber == 2){
         if(touch.x < 200 && touch.y < 200){
             myRegPage.grabImage();

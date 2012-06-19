@@ -36,6 +36,9 @@ class testApp : public ofxiPhoneApp{
 	
     bool fNameTog;
     bool lNameTog;
+    bool monthTog;
+    bool dayTog;
+    bool yearTog;
     
     ofxiPhoneKeyboard * firstNameKey;
     ofxiPhoneKeyboard * lastNameKey;
@@ -48,4 +51,6 @@ class testApp : public ofxiPhoneApp{
     registration myRegPage;
     
     ofImage profilePic;
+    
+    int tester;
 };
